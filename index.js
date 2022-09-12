@@ -15,7 +15,7 @@ db.once('open', () => {console.log("Connected to database")});
 
 // middleware
 app.use(express.json());
-app.use(bodyParser(urlencoded({extended: false})));
+app.use(bodyParser.json(urlencoded({extended: false})));
 
 app.use('/', userRoutes);
 app.use('/', postRoutes);

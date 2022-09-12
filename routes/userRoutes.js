@@ -10,7 +10,7 @@ router.post('/register', body('email').isEmail(), body('password').isLength({min
    try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-     res.status(400).json({errors: errors.array()})
+     return res.status(400).json({errors: errors.array()})
     }
     else {
          bcrypt.hash(req.body.password, 10, async (err,hash) => {
@@ -21,11 +21,17 @@ router.post('/register', body('email').isEmail(), body('password').isLength({min
                  })
              }
              else {
+                const isEmailExist = await userModel.find({email: req.body.email})
+                if (isEmailExist) {
+                    res.status(400).json({status: "failed"});
+                }
+                else {
                 await userModel.create({
                      name: req.body.name,
                      email: req.body.email,
                      password: hash
                  })
+                }
              }
          })
     }
